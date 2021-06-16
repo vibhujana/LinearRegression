@@ -1,0 +1,87 @@
+public class LSR {
+    private double[] _x, _y;
+
+    public LSR(double[] x, double[] y) {
+        _x = x;
+        _y = y;
+    }
+
+    private double calculateMean(double[] list) {
+        return calculateSum(list) / ((double) (list.length));
+    }
+
+    private double calculateSum(double[] list) {
+        double sum = 0;
+        for (int i = 0; i < list.length; i++) {
+            sum += list[i];
+        }
+        return sum;
+
+    }
+
+    private double calculateStandardDeviation(double[] list) {
+        double mean = calculateMean(list);
+        double sum = 0;
+        for (int i = 0; i < list.length; i++) {
+            sum += Math.pow(list[i] - mean, 2);
+        }
+        sum = sum / ((double) (list.length) - 1);
+        sum = Math.sqrt(sum);
+        return sum;
+    }
+
+    public double calculateR() {
+        double numeratorSum = 0;
+        double denominatorSum = 0;
+        double denominatorX = 0;
+        double denominatorY = 0;
+        double meanX = calculateMean(_x);
+        double meanY = calculateMean(_y);
+        for (int i = 0; i < _x.length; i++) {
+            numeratorSum += (_x[i] - meanX) * (_y[i] - meanY);
+            denominatorX += ((_x[i] - meanX) * (_x[i] - meanX));
+            denominatorY += ((_y[i] - meanY) * (_x[i] - meanY));
+        }
+        denominatorSum = denominatorX * denominatorY;
+        return (numeratorSum) / (Math.sqrt(denominatorSum));
+
+    }
+
+    public double calculateSlope() {
+        return calculateR() * (calculateStandardDeviation(_y) / calculateStandardDeviation(_x));
+    }
+
+    public double calculateIntercept() {
+        return calculateMean(_y) - calculateSlope() * calculateMean(_x);
+    }
+
+    public double predictY(double x) {
+        return calculateIntercept() + calculateSlope() * x;
+    }
+
+    public double residual(double x) {
+        int loc = -1;
+        for (int i = 0; i < _x.length; i++) {
+            if(_x[i] == x){
+                loc = i;
+                break;
+            }
+        }
+        if(loc == -1){
+            System.out.println("Value not in data");
+            return 404;
+        }
+        return  _y[loc] - predictY(x);
+
+    }
+
+    private boolean contains(double[] list, double val) {
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] == val)
+                return true;
+        }
+        return false;
+    }
+
+
+}
