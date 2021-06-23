@@ -1,0 +1,41 @@
+import java.io.*;
+
+public class DataLoader {
+
+    private String readFromInputStream(InputStream inputStream)
+            throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br
+                     = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        return resultStringBuilder.toString();
+    }
+    public String[] loadMNistData(String filepath) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(filepath);
+        String data = null;
+        try {
+            data = readFromInputStream(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String[] lines = data.split("\n");
+        return lines;
+    }
+
+    public void printCSV(String filepath){
+        String[] data = loadMNistData(filepath);
+        for (int i = 0; i < data.length; i++) {
+            System.out.println(data[i]);
+        }
+    }
+
+
+
+
+}
+
