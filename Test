@@ -1,0 +1,32 @@
+import java.util.ArrayList;
+
+public class test {
+    public static void main(String[] args) {
+
+
+        DataLoader data = new DataLoader();
+        String[] lines = data.loadMNistData("housing.csv");
+        ArrayList<Double> salary = new ArrayList<>();
+        ArrayList<Double> price = new ArrayList<>();
+        for (int i = 1; i < lines.length; i++) {
+            String[] info = lines[i].split(",");
+            salary.add(Double.valueOf(info[7]) * 10000.0);
+            price.add(Double.valueOf(info[8]));
+//            System.out.println(Double.valueOf(info[7]));
+//            System.out.println(Double.valueOf(info[8]));
+//            System.out.println();
+        }
+
+
+
+        LSR model = new LSR(salary,price);
+        System.out.println(model.calculateMean(salary));
+        System.out.println(model.calculateMean(price));
+//
+//
+//
+        System.out.println("The model is y = " + model.calculateIntercept() + " + " + model.calculateSlope() + "x which has a correlation coefficient of " + model.calculateR());
+        System.out.println(model.predictY(38706.71002906977));
+
+    }
+}
